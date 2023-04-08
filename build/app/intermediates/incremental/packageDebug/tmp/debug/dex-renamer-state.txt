@@ -1,0 +1,4 @@
+#Thu Apr 06 14:11:08 PDT 2023
+base.0=C\:\\Users\\Mustafa\\Downloads\\Flutter-Shop-App-main\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
