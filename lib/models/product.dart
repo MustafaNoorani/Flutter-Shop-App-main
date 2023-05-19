@@ -12,6 +12,7 @@ class Product with ChangeNotifier {
   String id;
   String pid;
   String productName;
+  String? vendor_type;
   String imageUrl;
   bool isFavorite;
 
@@ -29,6 +30,7 @@ class Product with ChangeNotifier {
         required this.price,
         required this.imageUrl,
         this.isFavorite = false,
+        this.vendor_type,
       });
 
   Map<String, dynamic> toJson() {
@@ -42,11 +44,18 @@ class Product with ChangeNotifier {
     data['quantity'] = this.quantity;
     data['description'] = this.description;
     data['image'] = this.imageUrl;
+    data['vendortype'] = this.vendor_type;
     return data;
   }
 
   void isFavoritePressed() {
     isFavorite = !isFavorite;
     notifyListeners();
+  }
+  Map<String, dynamic> tooJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['productid'] = this.id;
+    data['quantity'] = this.price;
+    return data;
   }
 }

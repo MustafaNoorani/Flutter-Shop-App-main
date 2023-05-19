@@ -42,20 +42,11 @@ class _CartScreenState extends State<CartScreen> {
             padding: const EdgeInsets.only(right: 8.0),
             child: TextButton(
               onPressed: () {
-               // order.addOrder(cart.cartItem.values.toList(), cart.totalAmount);
-               // cart.clearCart();
-               //  setState(() {
-               //    _isordered = !_isordered;
-               //  });
+
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) =>ShippingScreen()));
 
-                // Timer(const Duration(seconds: 2), () {
-                //   setState(() {
-                //     _isordered = !_isordered;
-                //     Navigator.of(context).pushReplacementNamed(Routes.orderScreen);
-                //   });
-                // });
+
               },
               child: const Text(
                 "ORDER NOW",
@@ -124,6 +115,7 @@ class _CartScreenState extends State<CartScreen> {
                   : ListView.builder(
                       itemCount: cart.cartItem.length,
                       itemBuilder: (context, index) => CartItem(
+                        pid: cart.cartItem.values.toList()[index].pid,
                           productid: cart.cartItem.values.toList()[index].id,
                           productName:
                               cart.cartItem.values.toList()[index].productName,

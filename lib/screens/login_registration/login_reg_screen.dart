@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/CustomerPanel/customer_login.dart';
 import 'package:shop_app/screens/login_registration/WholeSaler_login.dart';
 import 'package:shop_app/screens/login_registration/retailer_login.dart';
 import './custom_button_widget.dart';
@@ -60,6 +61,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => LoginScreenRetailer(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 10),
+          CustomButton(
+            color: Colors.black,
+            textColor: Colors.white,
+            text: "Login As Customer",
+            onPress: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreenCustomer(),
                 ),
               );
             },

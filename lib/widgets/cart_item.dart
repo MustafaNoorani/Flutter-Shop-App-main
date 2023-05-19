@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/provider/product_provider.dart';
 
 import '../provider/cart_provider.dart';
 
 // ignore: must_be_immutable
 class CartItem extends StatelessWidget {
+  String pid;
   String productid;
   String productName;
   int price;
@@ -14,6 +16,7 @@ class CartItem extends StatelessWidget {
   int quantity;
   CartItem({
     Key? key,
+    required this.pid,
     required this.productid,
     required this.productName,
     required this.price,
@@ -23,6 +26,7 @@ class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartProvider>(context);
+    var product = Provider.of<ProductProvider>(context);
     return Dismissible(
       key: ValueKey(productid),
       direction: DismissDirection.endToStart,
@@ -101,6 +105,8 @@ class CartItem extends StatelessWidget {
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
                           cart.addQuantity(productid);
+                          cart.update_order_quantity(cart.cartitemid, quantity.toInt()+1);
+                          product.update_product_quantity(productid,quantity);
                         },
                         icon: const Icon(Icons.add, size: 20),
                       ),
@@ -119,6 +125,8 @@ class CartItem extends StatelessWidget {
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
                           cart.removeQuantity(productid);
+                          cart.update_order_quantity(cart.cartitemid, quantity.toInt()-1);
+                          product.update_product_quantity(productid,quantity);
                         },
                         icon: const Icon(Icons.remove, size: 20),
                       ),

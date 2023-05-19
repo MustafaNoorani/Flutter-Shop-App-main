@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/provider/user_provider.dart';
+import 'package:shop_app/provider/user_id_class.dart';
+import 'package:shop_app/screens/CustomerPanel/cart_customer.dart';
+import 'package:shop_app/screens/CustomerPanel/customer_login.dart';
+import 'package:shop_app/screens/CustomerPanel/navigator_customer.dart';
+import 'package:shop_app/screens/CustomerPanel/orders_customer.dart';
+import 'package:shop_app/screens/WholesalerProfile.dart';
 import 'package:shop_app/screens/login_registration/login_reg_screen.dart';
 import 'package:shop_app/screens/login_registration/retailer_login.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -23,23 +29,52 @@ import './routes/routes.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  var loggedIn = prefs.getString("Retailer") ?? '';
+  var loggedInWholeSaler = prefs.getString("WholeSaler") ?? '';
+  var loggedInRetailer = prefs.getString("Retailer") ?? '';
+  var loggedInCustomer = prefs.getString("Customer") ?? '';
   bool? islogin;
-  if (loggedIn != '') {
-    var map = jsonDecode(loggedIn);
-    if (map['login'] == "true") {
+  String? loginAs;
+  if (loggedInWholeSaler != '' && loggedInRetailer == ''&& loggedInCustomer == '') {
+    var map = jsonDecode(loggedInWholeSaler);
+    if (map['success'] == true) {
       islogin = true;
+      loginAs = map['loginAs'];
+      UserID.updateJsonDataWholesaler();
     }
-  } else {
+  }
+  else if (loggedInWholeSaler == '' && loggedInRetailer != '' && loggedInCustomer == '') {
+    var map = jsonDecode(loggedInRetailer);
+    if (map['success'] == true) {
+      islogin = true;
+      loginAs = map['loginAs'];
+      UserID.updateJsonDataRetailer();
+    }
+  }
+    else if (loggedInWholeSaler == '' && loggedInRetailer == '' &&
+        loggedInCustomer != '') {
+      var map = jsonDecode(loggedInCustomer);
+      if (map['success'] == true) {
+        islogin = true;
+        loginAs = map['loginAs'];
+        UserID.updateJsonDataCustomer();
+      }
+    }
+
+
+  else {
     islogin = false;
+    loginAs = null;
   }
   print(islogin);
-  runApp(MyApp(login: islogin));
+  runApp(MyApp(login: islogin , loginAs: loginAs,));
 }
 
 class MyApp extends StatefulWidget {
   bool? login;
-  MyApp({Key? key, required this.login}) : super(key: key);
+  String? loginAs;
+
+  MyApp({Key? key, required this.login , required this.loginAs}) : super(key: key);
+
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -47,11 +82,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? islogin;
-
+  String? loginAs;
   @override
   void initState() {
     super.initState();
     islogin = widget.login;
+    loginAs = widget.loginAs;
     // if (islogin == true){
     //   Provider.of<CartProvxider_Shared>(context, listen: false)
     //       .my_shared_prefrence();
@@ -68,6 +104,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => DataClassRetailer(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DataClassCustomer(),
         ),
         ChangeNotifierProvider(
           create: (context) => ProductProvider(),
@@ -88,7 +127,8 @@ class _MyAppState extends State<MyApp> {
         home:  SplashScreen(
           seconds: 3,
           navigateAfterSeconds:
-              islogin == true ? NavigatorWidget() : WelcomeScreen(),
+          islogin == true && loginAs == 'w' ? WholesalerProfile() :  islogin == true && loginAs == 'r' ?
+          NavigatorWidget() : islogin == true && loginAs == 'c' ? NavigatorWidgetCustomer() : WelcomeScreen() ,
           title: new Text(
             'SplashScreen Example',
             style: new TextStyle(
@@ -106,6 +146,10 @@ class _MyAppState extends State<MyApp> {
           Routes.userProduct: (context) =>const UserProductsScreen(),
           Routes.addUserProduct: (context)=> const AddUserProduct(),
           Routes.updateproduct: (context)=> const UpdateProduct(),
+          Routes.navigator: (context)=> const NavigatorWidget(),
+          Routes.customernavigator: (context)=> const NavigatorWidgetCustomer(),
+          Routes.cartScreenCustomer: (context)=> const CartScreenCustomer(),
+          Routes.orderScreenCustomer: (context)=> const OrderScreenCustomer(),
         },
       ),
     );

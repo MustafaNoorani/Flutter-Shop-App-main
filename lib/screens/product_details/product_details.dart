@@ -112,9 +112,11 @@ class ProductDetails extends StatelessWidget {
                 child: InkWell(
                   onTap: () => cart.addToCart(
                       selectedProduct.id,
+                      selectedProduct.pid,
                       selectedProduct.productName,
                       selectedProduct.price.toInt(),
-                      selectedProduct.imageUrl),
+                      selectedProduct.imageUrl,
+                  selectedProduct.pid),
                   child: Card(
                     color: Colors.indigo,
                     margin: const EdgeInsets.all(0),

@@ -58,10 +58,11 @@ class OrderProvider with ChangeNotifier {
           Uri.parse("https://adorable-blue-frock.cyclic.app/api/order/"+userid+"/vieworder"),
           headers: {"Content-Type": "application/json"});
       var myMap = jsonDecode(response.body);
+      print(myMap);
       _cartItems.clear();
       _orderItem.clear();
       var dataSet = myMap["data"];
-      // print(dataSet);
+       print(dataSet);
       getDataSet(dataSet);
       return _orderItem;
     }
@@ -77,12 +78,13 @@ class OrderProvider with ChangeNotifier {
           Uri.parse("https://adorable-blue-frock.cyclic.app/api/order/"+userid+"/vieworder123"),
           headers: {"Content-Type": "application/json"});
       var myMap = jsonDecode(response.body);
-      print(myMap);
+      //print(myMap);
       _cartItems.clear();
       _orderItem.clear();
       var dataSet = myMap["data"];
       //print(dataSet);
       getDataSet(dataSet);
+      //print("habb$_orderItem");
       return _orderItem;
       // print(getDataSet(dataSet));
 
@@ -104,6 +106,7 @@ class OrderProvider with ChangeNotifier {
             if (_cartItems.containsKey(productId)) {
               _cartItems.update(productId, (existingItem) {
                 return Cart(
+                  pid: existingItem.pid,
                     itemid: existingItem.itemid,
                     id: existingItem.id,
                     productName: existingItem.productName,
@@ -116,6 +119,7 @@ class OrderProvider with ChangeNotifier {
               productId,
                   () =>
                   Cart(
+                    pid: product["pid"],
                     itemid: item["cartid"],
                     id: productId,
                     productName: product["productname"],
@@ -167,16 +171,16 @@ class OrderProvider with ChangeNotifier {
     }
 
   }
-  var retailerid='Default';
-  void getuser()async{
-    SharedPreferences logindata = await SharedPreferences.getInstance();
-
-    var data = logindata.getString("Retailer");
-    Map decodedjson = jsonDecode(data.toString());
-    retailerid = decodedjson["userid"];
-    //print(retailerid);
-
-  }
+  // var retailerid='Default';
+  // void getuser()async{
+  //   SharedPreferences logindata = await SharedPreferences.getInstance();
+  //
+  //   var data = logindata.getString("Retailer");
+  //   Map decodedjson = jsonDecode(data.toString());
+  //   retailerid = decodedjson["userid"];
+  //   //print(retailerid);
+  //
+  // }
 
 
 }

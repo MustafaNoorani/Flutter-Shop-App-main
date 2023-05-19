@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
 import 'package:shop_app/screens/user_products/user_products.dart';
+import '../../provider/user_id_class.dart';
 import '../../routes/routes.dart';
 import '/provider/product_provider.dart';
 
@@ -106,8 +107,8 @@ class _AddUserProductState extends State<AddUserProduct> {
       return;
     }
     _form.currentState!.save();
-    product.add_product(userId,_productName.text,_productPrice.text,_productQuantity.text,_productDescription.text,image,SelectedItem);
-    product.getAllwholesaler(userId);
+    product.add_product(userId,_productName.text,_productPrice.text,_productQuantity.text,_productDescription.text,image,SelectedItem,"w");
+    //product.getAllwholesaler(userId);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -123,12 +124,22 @@ class _AddUserProductState extends State<AddUserProduct> {
   }
   List<String> items = ['Body Parts', 'Electrical Parts', 'Engine Parts'];
   String? SelectedItem= 'Electrical Parts';
+
+  String Email= "";
+  var username = "";
+  @override
+  void initState()  {
+    super.initState();
+    UserID.updateJsonDataWholesaler();
+    username =UserID.userid_Wholesaler.toString() ;
+
+  }
   @override
   Widget build(BuildContext context) {
     Size _screenSize = MediaQuery.of(context).size;
     //var user = Provider.of<DataClass>(context);
     var product = Provider.of<ProductProvider>(context);
-    String userId = "Default";
+    //String userId = "Default";
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -140,7 +151,8 @@ class _AddUserProductState extends State<AddUserProduct> {
             onPressed: () {
               //print(SelectedItem);
               //userId = (user.json_data['data']['userid']);
-              _submitForm(userId,product);
+              print(username + "wholesale name");
+              _submitForm(username,product);
               //add_product(userId,_productName.text,_productPrice.text,_productQuantity.text,_productDescription.text,image,SelectedItem);
             },
             child: const Icon(
@@ -151,7 +163,8 @@ class _AddUserProductState extends State<AddUserProduct> {
           ),
         ],
       ),
-      body: Padding(
+      body: username != "" || username != null ?
+      Padding(
         padding: EdgeInsets.only(
           left: _screenSize.width * 0.03,
           right: _screenSize.width * 0.03,
@@ -344,7 +357,7 @@ class _AddUserProductState extends State<AddUserProduct> {
             ],
           ),
         ),
-      ),
+      ) : CircularProgressIndicator(),
     );
   }
 }

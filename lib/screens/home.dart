@@ -16,13 +16,20 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
+categoryName(String name){
+ if(name!=''){
+   return name;
+ }
+ else{
+   return " ";
+ }
+}
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
     Provider.of<CartProvider>(context, listen: false).my_shared_prefrence();
-    Provider.of<OrderProvider>(context, listen: false).getuser();
+    // Provider.of<OrderProvider>(context, listen: false).getuser();
   }
   @override
   Widget build(BuildContext context) {
@@ -31,9 +38,12 @@ class _HomePageState extends State<HomePage> {
     var productProvider = Provider.of<ProductProvider>(context);
     //var product = productProvider.items;
     var cart = Provider.of<CartProvider>(context);
+    String categoryname = ModalRoute.of(context)!.settings.arguments as String;
+
+    //print(categoryname);
+    print(categoryName(categoryname));
+
     //var order = Provider.of<OrderProvider>(context);
-    print(cart.cartItem);
-    print(cart.cartCount);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -72,9 +82,9 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: const MyDrawer(),
       body: FutureBuilder<List<Product>>(
-        future:productProvider.getAll('all','','') ,
+        future:productProvider.getAllProducts(' ','w',categoryname ?? " ") ,
         builder: (context, snapshot) {
-          print(snapshot.data);
+          //print(snapshot.data);
           if (snapshot.hasData) {
             return GridView.builder(
               padding: const EdgeInsets.all(10),

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/product_provider.dart';
+import '../routes/routes.dart';
 import 'navigator.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -53,7 +54,6 @@ class _MyDrawerState extends State<MyDrawer> {
           InkWell(
             onTap:()
             { //showDialoge(context);
-            Provider.of<ProductProvider>(context, listen: false).getAll('all','','');
             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
             builder: (context) => NavigatorWidget()), (Route route) => false);
             },
@@ -75,9 +75,12 @@ class _MyDrawerState extends State<MyDrawer> {
           InkWell(
             onTap: ()
             {
-              Provider.of<ProductProvider>(context, listen: false).getAll('cat','','Body Parts');
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  builder: (context) => NavigatorWidget()), (Route route) => false);
+              Navigator.pushNamed(context, Routes.navigator,
+                arguments: 'Body Parts' );
+
+              // Provider.of<ProductProvider>(context, listen: false).getAll('cat','','Body Parts');
+              // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+              //     builder: (context) => NavigatorWidget()), (Route route) => false);
             },child: const ListTile(
             leading: Icon(
               Icons.pageview,
@@ -96,9 +99,11 @@ class _MyDrawerState extends State<MyDrawer> {
           InkWell(
             onTap: ()
             {
-              Provider.of<ProductProvider>(context, listen: false).getAll('cat','','Electrical Parts');
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  builder: (context) => NavigatorWidget()), (Route route) => false);
+              Navigator.pushNamed(context, Routes.navigator,
+                arguments: 'Electrical Parts' );
+              // Provider.of<ProductProvider>(context, listen: false).getAll('cat','','Electrical Parts');
+              // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+              //     builder: (context) => NavigatorWidget()), (Route route) => false);
 
             },
             child: const ListTile(
@@ -119,10 +124,11 @@ class _MyDrawerState extends State<MyDrawer> {
           InkWell(
             onTap: ()
             {
-              Provider.of<ProductProvider>(context, listen: false).getAll('cat','','Engine Parts');
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  builder: (context) => NavigatorWidget()), (Route route) => false);
-
+              //Provider.of<ProductProvider>(context, listen: false).getAll('cat','','Engine Parts');
+              // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+              //     builder: (context) => NavigatorWidget() ), (Route route) => false);
+              Navigator.pushNamed(context, Routes.navigator,
+                  arguments: 'Engine Parts' );
             },   child: const ListTile(
             leading: Icon(
               Icons.pageview,

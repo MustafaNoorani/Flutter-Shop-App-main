@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/product_provider.dart';
+import 'package:shop_app/provider/user_id_class.dart';
 
 import '../../models/product.dart';
 import '../../provider/user_provider.dart';
@@ -18,20 +19,29 @@ class UserProductsScreen extends StatefulWidget {
 
 class _UserProductsScreenState extends State<UserProductsScreen> {
   @override
-  void initState() {
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     var vendor = Provider.of<DataClass>(context, listen: false);
+  //     String vendorId = vendor.json_data['data']['userid'];
+  //     Provider.of<ProductProvider>(context, listen: false)
+  //         .getAllwholesaler(vendorId);
+  //   });
+  // }
+  String Email= "";
+  var username = "";
+  @override
+  void initState()  {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var vendor = Provider.of<DataClass>(context, listen: false);
-      String vendorId = vendor.json_data['data']['userid'];
-      Provider.of<ProductProvider>(context, listen: false)
-          .getAllwholesaler(vendorId);
-    });
+    UserID.updateJsonDataWholesaler();
+    username =UserID.userid_Wholesaler.toString() ;
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var vendor = Provider.of<DataClass>(context, listen: false);
-    String vendorId = vendor.json_data['data']['userid'];
+    // var vendor = Provider.of<DataClass>(context, listen: false);
+    // String vendorId = vendor.json_data['data']['userid'];
     var _product = Provider
         .of<ProductProvider>(context);
     return Scaffold(
@@ -48,10 +58,11 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
         ],
       ),
       //drawer:  MyDrawer(),
-      body: Padding(
+      body:username != "" || username != null  ?
+      Padding(
           padding: const EdgeInsets.all(4.0),
           child: FutureBuilder<List<Product>>(
-            future:_product.getAllwholesaler(vendorId) ,
+            future:_product.getAllProducts(username,' ', ' '),
             builder: (context, snapshot) {
               print(snapshot.data);
               if (snapshot.hasData) {
@@ -79,7 +90,7 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
               return Center(child: const CircularProgressIndicator());
             },
           )
-      ),
+      ) : CircularProgressIndicator(),
     );
   }
 

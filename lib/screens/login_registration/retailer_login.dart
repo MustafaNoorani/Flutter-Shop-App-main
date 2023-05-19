@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/provider/user_id_class.dart';
 import 'package:shop_app/provider/user_provider.dart';
 import 'package:shop_app/screens/login_registration/retailer_registration.dart';
 import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
@@ -65,16 +66,28 @@ class _LoginScreenState extends State<LoginScreenRetailer> {
       // Provider.of<ProductProvider>(context, listen: false).getAllTodos();
       // Provider.of<CartProvider>(context, listen: false).view_cart(userid);
       SharedPreferences RetailerShared = await SharedPreferences.getInstance();
+
       var dataRetailer = {
-        "email" : provider.json_data['data']['email'],
-        "password" : provider.json_data['data']['password'],
-        "userid" : provider.json_data['data']['userid'],
-        "login" :  "true"
+        "success":true,
+        "loginAs" : "r",
+
+        "data": {
+
+          "_id": "63c1bd96cef55b7066be1e45",
+          "userid": provider.json_data['data']['userid'],
+          "fullname": provider.json_data['data']['fullname'],
+          "email": provider.json_data['data']['email'],
+          "phone": provider.json_data['data']['phone'],
+          "password": provider.json_data['data']['password'],
+          "addedon": provider.json_data['data']['addedon'],
+          "__v": 0
+        }
       };
       RetailerShared.setString("Retailer", jsonEncode(dataRetailer));
+      UserID.updateJsonDataRetailer();
       final timer = Timer(const Duration(seconds: 2), () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => NavigatorWidget()));
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+            NavigatorWidget()), (Route<dynamic> route) => false);
       });
     } else {
       _showDialog(context);

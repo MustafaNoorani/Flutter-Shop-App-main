@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/WholesalerProfile.dart';
 import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
 import 'package:shop_app/screens/profile.dart';
+import '../../provider/user_id_class.dart';
 import '../../provider/user_provider.dart';
 import './input_field.dart';
 import './theme.dart';
@@ -44,23 +49,43 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  login(String email , password  ) async{
-    userModel data = userModel(
-        email: email,
-        password: password
-    );
+  login(String email, password) async {
+    userModel data = userModel(email: email, password: password);
     showDialoge(context);
     var provider = Provider.of<DataClass>(context, listen: false);
     await provider.postDataLogin(data);
     if (provider.json_data['success'] == true) {
       setState(() {
         islogin = true;
-      } );
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => WholesalerProfile()));
-    }
-    else{
+      });
+      String userid = provider.json_data['data']['userid'];
+      //Product And Cart Word
+      // Provider.of<ProductProvider>(context, listen: false).getAllTodos();
+      // Provider.of<CartProvider>(context, listen: false).view_cart(userid);
+      SharedPreferences WholesalerShared = await SharedPreferences.getInstance();
+      var dataWholeSaler = {
+        "success":true,
+        "loginAs" : "w",
+        "data": {
+          "_id": "63c1bd96cef55b7066be1e45",
+          "userid": provider.json_data['data']['userid'],
+          "fullname": provider.json_data['data']['fullname'],
+          "email": provider.json_data['data']['email'],
+          "phone": provider.json_data['data']['phone'],
+          "password": provider.json_data['data']['password'],
+          "addedon": provider.json_data['data']['addedon'],
+          "__v": 0
+        }
+      };
+      print("SHARED DATA --- " + jsonEncode(dataWholeSaler));
+      WholesalerShared.setString("WholeSaler", jsonEncode(dataWholeSaler));
+      UserID.updateJsonDataWholesaler();
+      final timer = Timer(const Duration(seconds: 2), () {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+            WholesalerProfile()), (Route<dynamic> route) => false);
+      }
+      );
+    } else {
       _showDialog(context);
     }
   }

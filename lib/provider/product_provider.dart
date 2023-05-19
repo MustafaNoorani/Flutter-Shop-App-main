@@ -8,59 +8,59 @@ class ProductProvider with ChangeNotifier {
   final _service = ProductService();
   List<Product> _items = [];
   List<Product> get todos => _items;
-  Future<List<Product>> getAll(String productcat,String userid,String category) async {
-    if(productcat=='all'){
-      final response = await _service.getAll();
-      _items = response;
-      return response;
-    }
-    else if(productcat=='cat'){
-      final response = await _service.getAllcategory(category);
-      _items = response;
-      return response;
-    }
-    else if(productcat=='ws'){
-      final response = await getAllwholesaler(userid);
-      _items = response;
-      return response;
-    }
-    else{
-      return [];
-    }
-  }
-  Future<List<Product>> getAllTodos() async {
-    notifyListeners();
-    final response = await _service.getAll();
-    _items = response;
-    return response;
-  }
-  Future<void> getAllTodoswholesaler(String userid) async {
-    notifyListeners();
-    final response = await getAllwholesaler(userid);
-    _items = response;
-    notifyListeners();
-  }
-  Future<void> getAllTodoscategory(String userid) async {
-    notifyListeners();
-    final response = await _service.getAllcategory(userid);
-    _items = response;
-    notifyListeners();
-  }
+  // Future<List<Product>> getAll(String productcat,String userid,String category) async {
+  //   if(productcat=='all'){
+  //     final response = await _service.getAll();
+  //     _items = response;
+  //     return response;
+  //   }
+  //   else if(productcat=='cat'){
+  //     final response = await _service.getAllcategory(category);
+  //     _items = response;
+  //     return response;
+  //   }
+  //   else if(productcat=='ws'){
+  //     final response = await getAllwholesaler(userid);
+  //     _items = response;
+  //     return response;
+  //   }
+  //   else{
+  //     return [];
+  //   }
+  // }
+  // Future<List<Product>> getAllTodos() async {
+  //   notifyListeners();
+  //   final response = await _service.getAll();
+  //   _items = response;
+  //   return response;
+  // }
+  // Future<void> getAllTodoswholesaler(String userid) async {
+  //   notifyListeners();
+  //   final response = await getAllwholesaler(userid);
+  //   _items = response;
+  //   notifyListeners();
+  // }
+  // Future<void> getAllTodoscategory(String userid) async {
+  //   notifyListeners();
+  //   final response = await _service.getAllcategory(userid);
+  //   _items = response;
+  //   notifyListeners();
+  // }
 
   List<Product> get items {
     return [..._items];
   }
-  add_product(String  vendorid,productname, price , quantity ,description, image,category_type ) async {
+  add_product(String  vendorid,productname, price , quantity ,description, image,category_type,vendor_type ) async {
     Product data = Product(
         vendorid: vendorid,
         productName: productname,
-        price: price,
+        price: int.parse(price),
         quantity: int.parse(quantity),
         description: description,
         imageUrl: image,
         categoryname: category_type,
-        id: ""
-
+        id: "",
+      vendor_type: vendor_type,
     );
     print(data.categoryname);
     try {
@@ -77,7 +77,6 @@ class ProductProvider with ChangeNotifier {
       print(e.toString());
     }
   }
-
   Product findById(String id) {
     return _items.firstWhere((prod) {
       return prod.id == id;
@@ -139,31 +138,56 @@ class ProductProvider with ChangeNotifier {
       return favProducts.isFavorite;
     }).toList();
   }
-  Future<List<Product>> getAllwholesaler(String userid) async {
-    String url = 'https://adorable-blue-frock.cyclic.app/api/product/'+userid+'/get1';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as List;
-      return _service.getdata(json);
+  // Future<List<Product>> getAllwholesaler(String userid) async {
+  //   String url = 'https://adorable-blue-frock.cyclic.app/api/product/'+userid+'/get1';
+  //   final uri = Uri.parse(url);
+  //   final response = await http.get(uri);
+  //   if (response.statusCode == 200) {
+  //     final json = jsonDecode(response.body) as List;
+  //     return _service.getdata(json);
+  //   }
+  //   return [];
+  // }
+
+Future<List<Product>> getAllProducts(String vendorid,String vendortype,String categoryname) async {
+  String url = 'https://adorable-blue-frock.cyclic.app/api/product/'+vendorid+'/'+vendortype+'/'+categoryname+'/get1';
+  final uri = Uri.parse(url);
+  final response = await http.get(uri);
+  if (response.statusCode == 200) {
+    final json = jsonDecode(response.body) as List;
+    return _service.getdata(json);
+  }
+  return [];
+}
+  update_product_quantity(String productid,int quantity) async {
+    Product data = Product(id: productid, productName: "", price: quantity, imageUrl: "");
+    try {
+      http.Response response =
+      await http.put(
+          Uri.parse("https://adorable-blue-frock.cyclic.app/api/product/updatequantity"),
+
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data.tooJson()));
+      print(response.body);
     }
-    return [];
+    catch (e) {
+      print(e.toString());
+    }
+
   }
 }
-
-
 class ProductService {
-  Future<List<Product>> getAll() async {
-    const url = 'https://adorable-blue-frock.cyclic.app/api/product/get';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as List;
-      return getdata(json);
-
-    }
-    return [];
-  }
+  // Future<List<Product>> getAll() async {
+  //   const url = 'https://adorable-blue-frock.cyclic.app/api/product/get';
+  //   final uri = Uri.parse(url);
+  //   final response = await http.get(uri);
+  //   if (response.statusCode == 200) {
+  //     final json = jsonDecode(response.body) as List;
+  //     return getdata(json);
+  //
+  //   }
+  //   return [];
+  // }
   Future<List<Product>> getdata(List<dynamic> myData) async {
     final todos = myData.map((e) {
       return Product(
@@ -182,14 +206,14 @@ class ProductService {
 
   }
 
-  Future<List<Product>> getAllcategory(String category) async {
-    String url = 'https://adorable-blue-frock.cyclic.app/api/product/'+category+'/get2';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as List;
-      return getdata(json);
-    }
-    return [];
-  }
+  // Future<List<Product>> getAllcategory(String category) async {
+  //   String url = 'https://adorable-blue-frock.cyclic.app/api/product/'+category+'/get2';
+  //   final uri = Uri.parse(url);
+  //   final response = await http.get(uri);
+  //   if (response.statusCode == 200) {
+  //     final json = jsonDecode(response.body) as List;
+  //     return getdata(json);
+  //   }
+  //   return [];
+  // }
 }

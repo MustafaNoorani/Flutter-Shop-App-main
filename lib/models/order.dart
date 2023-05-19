@@ -32,6 +32,7 @@ class Order with ChangeNotifier {
     data['cnic'] = this.cnic;
     data['deliveryAddress'] = this.deliveryAddress;
     data['paymentmethod'] = this.paymentmethod;
+    data['id']=this.id;
     return data;
   }
   Map<String, dynamic> tooJson() {

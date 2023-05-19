@@ -1,10 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/main.dart';
+//import 'package:shop_app/provider/userid_class.dart';
 import 'package:shop_app/screens/cart.dart';
 import 'package:shop_app/screens/favorite.dart';
 import 'package:shop_app/screens/login_registration/login_reg_screen.dart';
+import 'package:shop_app/screens/user_products/user_product_retailer.dart';
+import 'package:splashscreen/splashscreen.dart';
+import '../provider/user_id_class.dart';
 import '../widgets/profile_listtile.dart';
 import 'UpdateUserDetails.dart';
 
@@ -23,16 +30,17 @@ delete_prefrence() async {
 
 
 class _ProfileState extends State<Profile> {
-  @override
-  String username= "";
+
   String Email= "";
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     Provider.of<DataClass>(context, listen: false).getData();
-  //
-  //   });
-  // }
+  var username;
+  @override
+  void initState()  {
+    UserID.updateJsonDataRetailer();
+    super.initState();
+    setState(() {
+      username = UserID.userid_Retailer;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     // var userProvider = Provider.of<DataClass>(context);
@@ -45,13 +53,13 @@ class _ProfileState extends State<Profile> {
 
     //String username = userProvider.us['username'].toString();
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Colors.black,
         toolbarHeight: 0,
         elevation: 0.0,
       ),
-      body: ListView(
+      body: username != null && username != '' ?
+      ListView(
         children: [
           Container(
             height: 210,
@@ -84,10 +92,11 @@ class _ProfileState extends State<Profile> {
                                 borderRadius: BorderRadius.circular(25),
                               )),
                           onPressed: () {},
-                          child: Text(
-                            username??" default value",
+                          child:
+                          Text(
+                            username,
                             style: TextStyle(color: Colors.white),
-                          )),
+                          ) ),
                     ),
                   ),
                 ],
@@ -124,7 +133,18 @@ class _ProfileState extends State<Profile> {
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) =>FavoriteScreen()));;
+                  context, MaterialPageRoute(builder: (context) =>FavoriteScreen()));
+            },
+          ),
+          InkWell(
+            child: CustomListTile(
+              "Add product and Inventory",
+              Icons.favorite_outline,
+              Icons.keyboard_arrow_right_outlined,
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) =>UserProductsRetailerScreen()));
             },
           ),
           // CustomListTile(
@@ -143,28 +163,6 @@ class _ProfileState extends State<Profile> {
                   context, MaterialPageRoute(builder: (context) =>UpdateUserDetails()));
             },
           ),
-          // SwitchListTile(
-          //   value: _darkMode,
-          //   title: Text(
-          //     ' Night Mode',
-          //     style: TextStyle(
-          //       fontSize: 16,
-          //       fontWeight: FontWeight.w500,
-          //     ),
-          //   ),
-          //   secondary: Padding(
-          //     padding: const EdgeInsets.all(9.0),
-          //     child: Icon(Icons.dark_mode),
-          //   ),
-          //   onChanged: (newValue) {
-          //     setState(() {
-          //       _darkMode = newValue;
-          //     });
-          //   },
-          //   visualDensity: VisualDensity.adaptivePlatformDensity,
-          //   // switchType: SwitchType.material,
-          //   activeColor: Colors.indigo,
-          // ),
           InkWell(
               child: ListTile(
                 title: Text(
@@ -182,34 +180,26 @@ class _ProfileState extends State<Profile> {
                 subtitle: Text(Email??"Registered to example@gmail.com"),
               ),
               onTap: () {
+                Timer(const Duration(microseconds: 200 ), () {
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                      SplashScreen(
+                        seconds: 3,
+                        navigateAfterSeconds:
+                        MyApp(login: null, loginAs: null),
+                        title: new Text(
+                          'SplashScreen Example',
+                          style: new TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.white),
+                        ),
+                        backgroundColor: Colors.lightBlue[200],
+                      ),), (Route<dynamic> route) => false);
+                });
                 delete_prefrence();
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                    builder: (context) => WelcomeScreen()), (
-                    Route route) => false);
               }
+
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, top: 15, bottom: 14),
-            child: Text(
-              "Support",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          // CustomListTile(
-          //   "Help",
-          //   Icons.space_bar_rounded,
-          //   Icons.keyboard_arrow_right_outlined,
-          // ),
-          // CustomListTile(
-          //   "About us",
-          //   Icons.person_outline,
-          //   Icons.keyboard_arrow_right_outlined,
-          // ),
-          // CustomListTile(
-          //   "Contact us",
-          //   Icons.message,
-          //   Icons.keyboard_arrow_right_outlined,
-          // ),
           SizedBox(height: 10),
           Center(
             child: Text(
@@ -219,7 +209,7 @@ class _ProfileState extends State<Profile> {
           ),
           SizedBox(height: 10),
         ],
-      ),
+      ) : CircularProgressIndicator(),
     );
   }
 }

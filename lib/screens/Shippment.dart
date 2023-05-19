@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/models/cart.dart';
 import 'package:shop_app/provider/order_provider.dart';
+import 'package:shop_app/provider/product_provider.dart';
 import 'package:shop_app/routes/routes.dart';
+import 'package:shop_app/widgets/navigator.dart';
 import '../../provider/cart_provider.dart';
+import '../provider/user_id_class.dart';
 import './login_registration//input_field.dart';
 import './login_registration/theme.dart';
 import './login_registration/custom_primary_button.dart';
@@ -18,22 +22,28 @@ class ShippingScreen extends StatefulWidget {
 }
 
 class _ShippingScreenState extends State<ShippingScreen> {
+  @override
+  // void initState() {
+  //   super.initState();
+  //   Provider.of<CartProvider>(context, listen: false).view_cart('r1');
+  // }
+  String Email= "";
+  var username;
+  @override
+  void initState()  {
+    UserID.updateJsonDataRetailer();
+    super.initState();
+    setState(() {
+      username = UserID.userid_Retailer;
+    });
+    Provider.of<CartProvider>(context,listen: false).view_cart(username);
+  }
 
   final TextEditingController phoneController = TextEditingController(text: '');
   final TextEditingController cnicController = TextEditingController(text:'');
   final TextEditingController fulladdressController = TextEditingController(text:'');
   final TextEditingController cityController = TextEditingController(text:'');
   String payment = "";
-  var retailerid;
-  void getuser()async{
-    SharedPreferences logindata = await SharedPreferences.getInstance();
-
-    var data = logindata.getString("Retailer");
-    Map decodedjson = jsonDecode(data.toString());
-    retailerid = decodedjson["userid"];
-    print(retailerid);
-
-  }
   @override
   Widget build(BuildContext context) {
     bool _isordered = false;
@@ -44,19 +54,22 @@ class _ShippingScreenState extends State<ShippingScreen> {
         ),
       );
     }
-    getuser();
     Size _screenSize = MediaQuery.of(context).size;
+
     var cart = Provider.of<CartProvider>(context);
+    //print(cart.itemid);
     var order = Provider.of<OrderProvider>(context);
-    // var user = Provider.of<DataClassRetailer>(context);
-    // String userId= "Default";
-    // userId = (user.json_data['data']['userid']);
-
-
+    // cart.cartItem.forEach((String,Cart) {
+    //   cart.update_order_quantity(Cart.itemid,Cart.quantity);
+    // });
+    var product = Provider.of<ProductProvider>(context);
+     print(product.items);
+   // cart.cartItem[widget.product.id]!.quantity
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body:username != null && username != '' ?
+      SingleChildScrollView(
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.fromLTRB(24.0, 40.0, 24.0, 0),
@@ -160,14 +173,15 @@ class _ShippingScreenState extends State<ShippingScreen> {
                   textValue: 'Confirm Order',
                   textColor: textBlack,
                   onPressed: () {
-                    //order.add_order(retailerid,cart.items,phoneController.text,cnicController.text,fulladdressController.text,payment.toString());
-                    //cart.clearCart(userId);
-                    //order.view_order(userId);
+                    cart.delete_prefrence();
+                    cart.clearApiCart(username);
+                    order.add_order(username,cart.items,phoneController.text,cnicController.text,fulladdressController.text,payment.toString());
                     setState(() {
                       _isordered = !_isordered;
                     });
                     Timer(const Duration(seconds: 1), () => setState(() {
                       _isordered = !_isordered;
+
                       Navigator.of(context).pushReplacementNamed(Routes.orderScreen);
                     }));
                   },
@@ -176,7 +190,7 @@ class _ShippingScreenState extends State<ShippingScreen> {
             ),
           ),
         ),
-      ),
+      ): CircularProgressIndicator(),
     );
 
   }

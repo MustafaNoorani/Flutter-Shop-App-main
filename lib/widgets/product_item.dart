@@ -7,6 +7,7 @@ import 'package:shop_app/screens/login_registration/Retailer_login.dart';
 import '../models/product.dart';
 import '../provider/cart_provider.dart';
 import '../provider/product_provider.dart';
+import '../provider/user_id_class.dart';
 import '../routes/routes.dart';
 import 'navigator.dart';
 
@@ -23,7 +24,16 @@ class ProductItems extends StatefulWidget {
 
 class _ProductItemsState extends State<ProductItems> {
   @override
-
+  String Email= "";
+  var username;
+  @override
+  void initState()  {
+    UserID.updateJsonDataRetailer();
+    super.initState();
+    setState(() {
+      username = UserID.userid_Retailer;
+    });
+  }
 
 
   Widget build(BuildContext context) {
@@ -38,7 +48,8 @@ class _ProductItemsState extends State<ProductItems> {
         Navigator.pushNamed(context, Routes.productDetails,
             arguments: widget.product.id);
       },
-      child: Stack(children: [
+      child: username != null && username != '' ?
+      Stack(children: [
         Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -132,7 +143,19 @@ class _ProductItemsState extends State<ProductItems> {
             ),
             child: InkWell(
               onTap: () {
-                cart.addToCart(widget.product.id,widget.product.productName,widget.product.price, widget.product.imageUrl);
+                if(cart.cartItem.containsKey(widget.product.id)){
+                  cart.update_order_quantity(cart.cartitemid , cart.cartItem[widget.product.id]!.quantity.toInt()+1);
+                  //print("not add");
+                  //print(cart.cartItem[widget.product.id]!.quantity);
+
+                }
+                else{
+                  cart.add_cart(widget.product.pid,username);
+                  //print("added");
+                }
+
+                cart.addToCart(widget.product.id,widget.product.pid,widget.product.productName,widget.product.price, widget.product.imageUrl,widget.product.pid);
+                products.update_product_quantity(widget.product.id,widget.product.quantity-(cart.cartItem[widget.product.id]!.quantity.toInt()+1) );
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -204,7 +227,7 @@ class _ProductItemsState extends State<ProductItems> {
             ],
           ),
         ),
-      ]),
+      ]): CircularProgressIndicator(),
     );
   }
 }
