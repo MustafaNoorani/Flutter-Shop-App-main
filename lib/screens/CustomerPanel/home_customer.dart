@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/screens/CustomerPanel/my_drawer_customer.dart';
 import 'package:shop_app/screens/CustomerPanel/product_item_Customer.dart';
 import 'package:shop_app/widgets/my_drawer.dart';
 import '../../models/product.dart';
@@ -71,7 +72,7 @@ class _HomePageCustomerState extends State<HomePageCustomer> {
           ),
         ],
       ),
-      drawer: const MyDrawer(),
+      drawer: const MyDrawerCustomer(),
       body: FutureBuilder<List<Product>>(
         future:productProvider.getAllProducts(' ','r',categoryname??" ") ,
         builder: (context, snapshot) {

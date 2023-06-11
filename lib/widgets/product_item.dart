@@ -43,6 +43,7 @@ class _ProductItemsState extends State<ProductItems> {
     var cart = Provider.of<CartProvider>(context);
     var products = Provider.of<ProductProvider>(context);
    // var user = Provider.of<DataClassRetailer>(context);
+    products.quantitylist.add(widget.product.quantity);
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, Routes.productDetails,
@@ -144,18 +145,12 @@ class _ProductItemsState extends State<ProductItems> {
             child: InkWell(
               onTap: () {
                 if(cart.cartItem.containsKey(widget.product.id)){
-                  cart.update_order_quantity(cart.cartitemid , cart.cartItem[widget.product.id]!.quantity.toInt()+1);
-                  //print("not add");
-                  //print(cart.cartItem[widget.product.id]!.quantity);
-
                 }
                 else{
                   cart.add_cart(widget.product.pid,username);
-                  //print("added");
                 }
-
                 cart.addToCart(widget.product.id,widget.product.pid,widget.product.productName,widget.product.price, widget.product.imageUrl,widget.product.pid);
-                products.update_product_quantity(widget.product.id,widget.product.quantity-(cart.cartItem[widget.product.id]!.quantity.toInt()+1) );
+                products.update_product_quantity(widget.product.id,widget.product.quantity-cart.cartItem[widget.product.id]!.quantity);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

@@ -6,11 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
+
 import 'package:shop_app/screens/user_products/user_product_retailer.dart';
-import 'package:shop_app/screens/user_products/user_products.dart';
+
 import '../../provider/user_id_class.dart';
-import '../../routes/routes.dart';
+
 import '/provider/product_provider.dart';
 
 class AddUserProductRetailer extends StatefulWidget {

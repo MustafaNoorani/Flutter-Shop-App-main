@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/models/order.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/provider/product_provider.dart';
 import '../models/cart.dart';
 
 class OrderProvider with ChangeNotifier {
@@ -12,10 +13,11 @@ class OrderProvider with ChangeNotifier {
     return [..._orderItem];
   }
   final Map<String, Cart> _cartItems = {};
-
   Map<String, Cart> get cartItem {
     return {..._cartItems};
   }
+  Map<String, Cart> quantity = {};
+  //Map<dynamic,productid> updatelist={};
   add_order(var  userid, orderitems , phonenumber, cnic , deliveryaddress,paymentmethod) async {
     Order data = Order(
         totalAmount: 0,
@@ -101,7 +103,7 @@ class OrderProvider with ChangeNotifier {
       (data["items"] as List).forEach((item) {
         if (item["product"].length > 0) {
           var product = item["product"][0];
-          String productId = product["_id"];
+          String productId = product["productid"];
           if (productId != '') {
             if (_cartItems.containsKey(productId)) {
               _cartItems.update(productId, (existingItem) {
@@ -171,6 +173,16 @@ class OrderProvider with ChangeNotifier {
     }
 
   }
+  void clearApiOrder(String orderid) async {
+    try {
+      //http.Response response =
+      await http.delete(
+          Uri.parse("https://adorable-blue-frock.cyclic.app/api/order/"+orderid+"/removefromorder"));
+      // _cartItems.clear();
+    }
+    catch(e)
+    {print(e.toString());}
+  }
   // var retailerid='Default';
   // void getuser()async{
   //   SharedPreferences logindata = await SharedPreferences.getInstance();
@@ -181,6 +193,5 @@ class OrderProvider with ChangeNotifier {
   //   //print(retailerid);
   //
   // }
-
 
 }

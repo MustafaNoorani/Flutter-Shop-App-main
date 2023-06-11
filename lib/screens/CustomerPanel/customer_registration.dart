@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/user_provider.dart';
 import 'package:shop_app/screens/CustomerPanel/customer_login.dart';
-import 'package:shop_app/screens/login_registration/retailer_login.dart';
-//import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
+import '../../provider/user_id_class.dart';
 import '../login_registration/input_field.dart';
 import '../login_registration/theme.dart';
 import '../login_registration/custom_primary_button.dart';
@@ -43,8 +42,10 @@ class _RegisterScreenState extends State<RegisterScreenCustomer> {
     var provider = Provider.of<DataClassCustomer>(context, listen: false);
     await provider.postDataRegisterCustomer(data);
     if (provider.json_data['success'] == true) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => LoginScreenCustomer()));
+      _showDialog(context);
+      UserID().sendmail("mustafa", "jovin32735@onlcool.com", "SIGN UP", "Welcome to SamjhDar Dukardar\nHappy Surfing..!",emailController.text);
+
+
     }
   }
 
@@ -259,4 +260,25 @@ class _RegisterScreenState extends State<RegisterScreenCustomer> {
       ),
     );
   }
+}
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("User Message"),
+        content: Text("Your Account is Created.."),
+        actions: <Widget>[
+          ElevatedButton(
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginScreenCustomer()));
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

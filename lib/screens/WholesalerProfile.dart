@@ -1,20 +1,17 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shop_app/main.dart';
-//import 'package:shop_app/provider/userid_class.dart';
 import 'package:shop_app/screens/WholesalerOrder.dart';
+import 'package:shop_app/screens/addnearbyworkshops.dart';
 import 'package:shop_app/screens/login_registration/login_reg_screen.dart';
-import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
+import 'package:shop_app/screens/user_products/predictimage.dart';
 import 'package:splashscreen/splashscreen.dart';
+import '../main.dart';
 import '../provider/order_provider.dart';
-import '../provider/product_provider.dart';
 import '../provider/user_id_class.dart';
-import '../provider/user_provider.dart';
 import '../routes/routes.dart';
 import '../widgets/profile_listtile.dart';
 import 'UpdateUserDetails.dart';
@@ -30,6 +27,7 @@ bool _darkMode = true;
 delete_prefrence() async {
   SharedPreferences sharedprefremove = await SharedPreferences.getInstance();
   sharedprefremove.remove("WholeSaler");
+  sharedprefremove.remove("myData");
 }
 class _WholesalerProfileState extends State<WholesalerProfile> {
   String Email= "";
@@ -114,13 +112,35 @@ class _WholesalerProfileState extends State<WholesalerProfile> {
           ),
           InkWell(
             child: CustomListTile(
+              "Add Workshps",
+              Icons.place_outlined,
+              Icons.keyboard_arrow_right_outlined,
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) =>AddNearByWorkshops()));
+            },
+          ),
+          InkWell(
+            child: CustomListTile(
               "My Order",
-              Icons.favorite_outline,
+              Icons.podcasts_rounded,
               Icons.keyboard_arrow_right_outlined,
             ),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) =>WholeSalerOrder()));
+            },
+          ),
+          InkWell(
+            child: CustomListTile(
+              "Add by Prediction",
+              Icons.read_more_sharp,
+              Icons.keyboard_arrow_right_outlined,
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) =>predictimage()));
             },
           ),
 
@@ -135,28 +155,6 @@ class _WholesalerProfileState extends State<WholesalerProfile> {
                   context, MaterialPageRoute(builder: (context) =>UpdateUserDetails()));
             },
           ),
-          // SwitchListTile(
-          //   value: _darkMode,
-          //   title: Text(
-          //     ' Night Mode',
-          //     style: TextStyle(
-          //       fontSize: 16,
-          //       fontWeight: FontWeight.w500,
-          //     ),
-          //   ),
-          //   secondary: Padding(
-          //     padding: const EdgeInsets.all(9.0),
-          //     child: Icon(Icons.dark_mode),
-          //   ),
-          //   onChanged: (newValue) {
-          //     setState(() {
-          //       _darkMode = newValue;
-          //     });
-          //   },
-          //   visualDensity: VisualDensity.adaptivePlatformDensity,
-          //   // switchType: SwitchType.material,
-          //   activeColor: Colors.indigo,
-          // ),
           InkWell(
               child: ListTile(
                 title: Text(
@@ -174,6 +172,7 @@ class _WholesalerProfileState extends State<WholesalerProfile> {
                 subtitle: Text(Email??"Registered to example@gmail.com"),
               ),
               onTap: () {
+
                 Timer(const Duration(microseconds: 200 ), () {
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                       SplashScreen(
@@ -193,28 +192,6 @@ class _WholesalerProfileState extends State<WholesalerProfile> {
                 delete_prefrence();
               }
           ),
-          // Padding(
-          //   padding: EdgeInsets.only(left: 20, top: 15, bottom: 14),
-          //   child: Text(
-          //     "Support",
-          //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          //   ),
-          // ),
-          // CustomListTile(
-          //   "Help",
-          //   Icons.space_bar_rounded,
-          //   Icons.keyboard_arrow_right_outlined,
-          // ),
-          // CustomListTile(
-          //   "About us",
-          //   Icons.person_outline,
-          //   Icons.keyboard_arrow_right_outlined,
-          // ),
-          // CustomListTile(
-          //   "Contact us",
-          //   Icons.message,
-          //   Icons.keyboard_arrow_right_outlined,
-          // ),
           SizedBox(height: 10),
           Center(
             child: Text(

@@ -32,8 +32,6 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     var order = Provider.of<OrderProvider>(context);
-    // order.view_order(username);
-    // var retailerid=order.retailerid;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
@@ -56,27 +54,11 @@ class _OrderScreenState extends State<OrderScreen> {
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            // else if (snapshot.data?.length == 0) {
-            //   return const Center(
-            //     child: Text(
-            //       "Nothing Ordered Yet!",
-            //       style: TextStyle(
-            //           fontSize: 20,
-            //           color: Colors.indigo,
-            //           fontWeight: FontWeight.w500),
-            //     ),
-            //   );
-            // }
 
             // By default, show a loading spinner.
             return const Center(child: CircularProgressIndicator());
           },
         ):CircularProgressIndicator(),
-      // ListView.builder(
-      //         itemCount: order.orderItem.length,
-      //         itemBuilder: (context, index) {
-      //           return OrderItem(order: order.orderItem[index]);
-      //         }),
     );
   }
 }

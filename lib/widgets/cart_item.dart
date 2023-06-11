@@ -8,7 +8,7 @@ import '../provider/cart_provider.dart';
 
 // ignore: must_be_immutable
 class CartItem extends StatelessWidget {
-  String pid;
+  String itemid;
   String productid;
   String productName;
   int price;
@@ -16,7 +16,7 @@ class CartItem extends StatelessWidget {
   int quantity;
   CartItem({
     Key? key,
-    required this.pid,
+    required this.itemid,
     required this.productid,
     required this.productName,
     required this.price,
@@ -27,6 +27,7 @@ class CartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var cart = Provider.of<CartProvider>(context);
     var product = Provider.of<ProductProvider>(context);
+    cart.update_order_quantity(cart.itemid,quantity.toInt());
     return Dismissible(
       key: ValueKey(productid),
       direction: DismissDirection.endToStart,
@@ -105,8 +106,9 @@ class CartItem extends StatelessWidget {
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
                           cart.addQuantity(productid);
-                          cart.update_order_quantity(cart.cartitemid, quantity.toInt()+1);
-                          product.update_product_quantity(productid,quantity);
+                          product.update_product_quantity(productid,product.findById(productid).quantity-quantity);
+
+
                         },
                         icon: const Icon(Icons.add, size: 20),
                       ),
@@ -125,8 +127,7 @@ class CartItem extends StatelessWidget {
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
                           cart.removeQuantity(productid);
-                          cart.update_order_quantity(cart.cartitemid, quantity.toInt()-1);
-                          product.update_product_quantity(productid,quantity);
+                          product.update_product_quantity(productid,product.findById(productid).quantity-quantity);
                         },
                         icon: const Icon(Icons.remove, size: 20),
                       ),

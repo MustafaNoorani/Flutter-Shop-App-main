@@ -10,5 +10,6 @@ class Routes {
   static const String customernavigator = "/NaviagatorCustomer";
   static const String cartScreenCustomer = "/cart-Screen-customer";
   static const String orderScreenCustomer = "/order-Screen-customer";
+  static const String forgetpasswordScreenCustomer = "/forgetpassword-Screen-customer";
 
 }

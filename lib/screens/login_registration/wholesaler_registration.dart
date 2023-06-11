@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:shop_app/widgets/navigator.dart';
 
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:login_signup/cubit/auth_cubit.dart';
-// import 'package:login_signup/screens/home_screen.dart';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/provider/user_provider.dart';
+
+import '../../provider/user_id_class.dart';
 import './input_field.dart';
 
 import './theme.dart';
-import './custome_checkbox.dart';
 import './custom_primary_button.dart';
+import 'WholeSaler_login.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -16,19 +17,39 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController useridController =
+  TextEditingController(text: '');
   final TextEditingController nameController = TextEditingController(text: '');
   final TextEditingController emailController = TextEditingController(text: '');
+  final TextEditingController phoneController = TextEditingController(text: '');
   final TextEditingController passwordController =
-      TextEditingController(text: '');
+  TextEditingController(text: '');
 
   bool passwordVisible = false;
   bool passwordConfrimationVisible = false;
   bool isChecked = false;
+  bool isRegistered = false;
 
   void togglePassword() {
     setState(() {
       passwordVisible = !passwordVisible;
     });
+  }
+
+  register_wholesaler(String userid, name, email, password, phonenumber) async {
+    userModel data = userModel(
+        userid: userid,
+        fullname: name,
+        email: email,
+        phone: phonenumber,
+        password: password);
+    var provider = Provider.of<DataClass>(context, listen: false);
+    await provider.postDataRegister(data);
+    if (provider.json_data['success'] == true) {
+      UserID().sendmail("mustafa", "jovin32735@onlcool.com", "SIGN UP", "Welcome to SamjhDar Dukardar\nHappy Surfing..!",emailController.text);
+      _showDialog(context);
+
+    }
   }
 
   @override
@@ -69,9 +90,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     children: [
                       InputField(
-                        hintText: 'Name',
+                        hintText: 'Enter User ID',
+                        controller: useridController,
+                        suffixIcon: SizedBox(),
+                      ),
+                      SizedBox(
+                        height: 32,
+                      ),
+                      InputField(
+                        hintText: 'Enter Your Name',
                         controller: nameController,
                         suffixIcon: SizedBox(),
+                      ),
+                      SizedBox(
+                        height: 32,
+                      ),
+                      InputField(
+                        hintText: 'Password',
+                        controller: passwordController,
+                        obscureText: !passwordVisible,
+                        suffixIcon: IconButton(
+                          color: textGrey,
+                          splashRadius: 1,
+                          icon: Icon(passwordVisible
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined),
+                          onPressed: togglePassword,
+                        ),
                       ),
                       SizedBox(
                         height: 32,
@@ -85,49 +130,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 32,
                       ),
                       InputField(
-                        hintText: 'Password',
-                        controller: passwordController,
-                        obscureText: !passwordVisible,
-                        suffixIcon: IconButton(
-                          color: textGrey,
-                          splashRadius: 1,
-                          icon: Icon(passwordVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined),
-                          onPressed: togglePassword,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 32,
-                      ),
-                      InputField(
-                        hintText: 'Password',
-                        controller: passwordController,
-                        obscureText: !passwordVisible,
-                        suffixIcon: IconButton(
-                          color: textGrey,
-                          splashRadius: 1,
-                          icon: Icon(passwordVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined),
-                          onPressed: togglePassword,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 32,
-                      ),
-                      InputField(
-                        hintText: 'Password',
-                        controller: emailController,
-                        obscureText: !passwordVisible,
-                        suffixIcon: IconButton(
-                          color: textGrey,
-                          splashRadius: 1,
-                          icon: Icon(passwordVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined),
-                          onPressed: togglePassword,
-                        ),
+                        hintText: 'Enter Phone Number',
+                        controller: phoneController,
+                        suffixIcon: SizedBox(),
                       ),
                       SizedBox(
                         height: 32,
@@ -159,10 +164,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 20,
                         child: isChecked
                             ? Icon(
-                                Icons.check,
-                                size: 20,
-                                color: Colors.white,
-                              )
+                          Icons.check,
+                          size: 20,
+                          color: Colors.white,
+                        )
                             : null,
                       ),
                     ),
@@ -187,57 +192,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(
                   height: 32,
                 ),
-                // BlocConsumer<AuthCubit, AuthState>(
-                //   listener: (context, state) {
-                //     if (state is AuthSuccess) {
-                //       Navigator.pushAndRemoveUntil(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) => HomeScreen(),
-                //           ),
-                //               (route) => false);
-                //     } else if (state is AuthFailed) {
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(
-                //           backgroundColor: Colors.red.shade700,
-                //           content: Text(
-                //             state.error,
-                //           ),
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   builder: (context, state) {
-                //     if (state is AuthLoading) {
-                //       return Center(
-                //         child: CircularProgressIndicator(),
-                //       );
-                //     }
-                //     return CustomPrimaryButton(
                 CustomPrimaryButton(
                     buttonColor: primaryBlue,
                     textValue: 'Register',
                     textColor: Colors.white,
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NavigatorWidget()));
-                      // isChecked
-                      //     ? context.read<AuthCubit>().signUp(
-                      //   name: nameController.text,
-                      //   email: emailController.text,
-                      //   password: passwordController.text,
-                      // )
-                      //     : ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     backgroundColor: Colors.red.shade700,
-                      //     content: Text(
-                      //       'Are you agree with our Tems & Conditions?',
-                      //     ),
-                      //   ),
-                      // );
-                    }),
+                      register_wholesaler(
+                          useridController.text,
+                          nameController.text,
+                          emailController.text,
+                          passwordController.text,
+                          phoneController.text);
+
+                    }
+
+                    ),
+
 
                 SizedBox(
                   height: 50,
@@ -269,4 +239,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("User Message"),
+        content: Text("Your Account is Created.."),
+        actions: <Widget>[
+          ElevatedButton(
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()));
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

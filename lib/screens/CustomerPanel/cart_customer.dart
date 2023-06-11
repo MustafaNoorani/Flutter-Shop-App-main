@@ -118,7 +118,7 @@ class _CartScreenCustomerState extends State<CartScreenCustomer> {
                   : ListView.builder(
                       itemCount: cart.cartItem.length,
                       itemBuilder: (context, index) => CartItem(
-                        pid: cart.cartItem.values.toList()[index].pid,
+                        itemid:cart.items[index],
                           productid: cart.cartItem.values.toList()[index].id,
                           productName:
                               cart.cartItem.values.toList()[index].productName,

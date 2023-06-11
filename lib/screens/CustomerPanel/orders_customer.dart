@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shop_app/provider/user_id_class.dart';
+import 'package:shop_app/screens/CustomerPanel/navigator_customer.dart';
 
 import 'package:shop_app/widgets/order_item.dart';
 
@@ -33,13 +34,19 @@ class _OrderScreenCustomerState extends State<OrderScreenCustomer> {
     // order.view_order(username);
     // var retailerid=order.retailerid;
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
+        appBar:
+        AppBar(
           title: const Text(
             "Orders Summary",
             style: TextStyle(fontSize: 22),
           ),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                  NavigatorWidgetCustomer()), (Route<dynamic> route) => false)
+          ),
         ),
+
         body:username != null && username != '' ?
         FutureBuilder<List<Order>>(
           future: order.view_order(username),

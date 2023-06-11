@@ -7,45 +7,15 @@ import 'package:http/http.dart' as http;
 class ProductProvider with ChangeNotifier {
   final _service = ProductService();
   List<Product> _items = [];
-  List<Product> get todos => _items;
-  // Future<List<Product>> getAll(String productcat,String userid,String category) async {
-  //   if(productcat=='all'){
-  //     final response = await _service.getAll();
-  //     _items = response;
-  //     return response;
-  //   }
-  //   else if(productcat=='cat'){
-  //     final response = await _service.getAllcategory(category);
-  //     _items = response;
-  //     return response;
-  //   }
-  //   else if(productcat=='ws'){
-  //     final response = await getAllwholesaler(userid);
-  //     _items = response;
-  //     return response;
-  //   }
-  //   else{
-  //     return [];
-  //   }
-  // }
-  // Future<List<Product>> getAllTodos() async {
-  //   notifyListeners();
-  //   final response = await _service.getAll();
-  //   _items = response;
-  //   return response;
-  // }
-  // Future<void> getAllTodoswholesaler(String userid) async {
-  //   notifyListeners();
-  //   final response = await getAllwholesaler(userid);
-  //   _items = response;
-  //   notifyListeners();
-  // }
-  // Future<void> getAllTodoscategory(String userid) async {
-  //   notifyListeners();
-  //   final response = await _service.getAllcategory(userid);
-  //   _items = response;
-  //   notifyListeners();
-  // }
+  //List<Product> get todos => _items;
+
+  Future<void> getAllTodos(List<dynamic> mydata) async {
+    final response = await _service.getdata(mydata);
+    _items = response;
+    //_itemsSerachProduct = _items;
+    //notifyListeners();
+  }
+  List<dynamic> quantitylist = [];
 
   List<Product> get items {
     return [..._items];
@@ -155,11 +125,12 @@ Future<List<Product>> getAllProducts(String vendorid,String vendortype,String ca
   final response = await http.get(uri);
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body) as List;
+    getAllTodos(json);
     return _service.getdata(json);
   }
   return [];
 }
-  update_product_quantity(String productid,int quantity) async {
+  update_product_quantity(String productid, quantity) async {
     Product data = Product(id: productid, productName: "", price: quantity, imageUrl: "");
     try {
       http.Response response =

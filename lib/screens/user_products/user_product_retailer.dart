@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/product_provider.dart';
 import 'package:shop_app/provider/user_id_class.dart';
 import 'package:shop_app/screens/user_products/add_product_retailer.dart';
-
 import '../../models/product.dart';
-import '../../provider/user_provider.dart';
-import '../../routes/routes.dart';
 import '../../widgets/user_product_item.dart';
-import '../login_registration/wholesaler_registration.dart';
 
 class UserProductsRetailerScreen extends StatefulWidget {
   const UserProductsRetailerScreen({Key? key}) : super(key: key);
@@ -19,16 +14,6 @@ class UserProductsRetailerScreen extends StatefulWidget {
 }
 
 class _UserProductsRetailerScreenState extends State<UserProductsRetailerScreen> {
-  @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     var vendor = Provider.of<DataClass>(context, listen: false);
-  //     String vendorId = vendor.json_data['data']['userid'];
-  //     Provider.of<ProductProvider>(context, listen: false)
-  //         .getAllwholesaler(vendorId);
-  //   });
-  // }
   String Email= "";
   var username = "";
   @override
@@ -41,8 +26,6 @@ class _UserProductsRetailerScreenState extends State<UserProductsRetailerScreen>
 
   @override
   Widget build(BuildContext context) {
-    // var vendor = Provider.of<DataClass>(context, listen: false);
-    // String vendorId = vendor.json_data['data']['userid'];
     var _product = Provider
         .of<ProductProvider>(context);
     return Scaffold(
@@ -79,6 +62,7 @@ class _UserProductsRetailerScreenState extends State<UserProductsRetailerScreen>
                             price: snapshot.data![index].price,
                             imgUrl: (snapshot.data![index].imageUrl),
                             status: (snapshot.data![index].status),
+                            quantity: (snapshot.data![index].quantity),
                           ),
                           const Divider(),
                         ],

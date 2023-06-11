@@ -53,7 +53,7 @@ class CartProvider with ChangeNotifier {
           productName: existingItem.productName,
           price: existingItem.price,
           imgUrl: existingItem.imgUrl,
-          quantity: existingItem.quantity + 1, itemid: '');
+          quantity: existingItem.quantity + 1, itemid: existingItem.itemid);
     });
     // temlist = temlist;
     notifyListeners();
@@ -71,7 +71,7 @@ class CartProvider with ChangeNotifier {
             productName: existingItem.productName,
             price: existingItem.price,
             imgUrl: existingItem.imgUrl,
-            quantity: existingItem.quantity, itemid: '');
+            quantity: existingItem.quantity, itemid: existingItem.itemid);
       } else {
         String a = existingItem.id.toString();
         temlist.forEach((element) {
@@ -88,7 +88,7 @@ class CartProvider with ChangeNotifier {
             productName: existingItem.productName,
             price: existingItem.price,
             imgUrl: existingItem.imgUrl,
-            quantity: existingItem.quantity - 1, itemid: '');
+            quantity: existingItem.quantity - 1, itemid:existingItem.itemid);
       }
     });
     notifyListeners();
@@ -124,7 +124,7 @@ class CartProvider with ChangeNotifier {
       _cartItems.putIfAbsent(
         productId,
             () => Cart(
-          itemid:"",
+          itemid:cartitemid,
           id: productId,
           productName: productName,
           price: price,
@@ -141,7 +141,7 @@ class CartProvider with ChangeNotifier {
         "price": price,
         "imgUrl": imgUrl,
         "quantity": 1,
-        "pid":pid
+        "itemid":cartitemid
       };
       temlist.add(json);
     }
@@ -227,6 +227,8 @@ class CartProvider with ChangeNotifier {
       var myMap = jsonDecode(response.body);
       //print(myMap);
       cartitemid = myMap["data"]["_id"];
+      items.add(cartitemid);
+      print(items);
     }
 
     catch (e) {
@@ -271,7 +273,7 @@ class CartProvider with ChangeNotifier {
       //http.Response response =
       await http.delete(
           Uri.parse("https://adorable-blue-frock.cyclic.app/api/cart/"+userid+"/removefromcart"));
-     // _cartItems.clear();
+      _cartItems.clear();
     }
     catch(e)
     {print(e.toString());}

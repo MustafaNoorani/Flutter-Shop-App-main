@@ -5,15 +5,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/main.dart';
-//import 'package:shop_app/provider/userid_class.dart';
+import 'package:shop_app/screens/RetailerOrder.dart';
+import 'package:shop_app/screens/addnearbyworkshops.dart';
+
 import 'package:shop_app/screens/cart.dart';
-import 'package:shop_app/screens/favorite.dart';
-import 'package:shop_app/screens/login_registration/login_reg_screen.dart';
-import 'package:shop_app/screens/user_products/user_product_retailer.dart';
+import 'package:shop_app/screens/login_registration/UpdateUserDetails.dart';
+import 'package:shop_app/screens/user_products/add_product_retailer.dart';
+import 'package:shop_app/screens/user_products/predictimage.dart';
 import 'package:splashscreen/splashscreen.dart';
 import '../provider/user_id_class.dart';
 import '../widgets/profile_listtile.dart';
-import 'UpdateUserDetails.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ bool _darkMode = true;
 delete_prefrence() async {
   SharedPreferences sharedprefremove = await SharedPreferences.getInstance();
   sharedprefremove.remove("Retailer");
+  sharedprefremove.remove("myData");
 }
 
 
@@ -43,15 +45,6 @@ class _ProfileState extends State<Profile> {
   }
   @override
   Widget build(BuildContext context) {
-    // var userProvider = Provider.of<DataClass>(context);
-    //  var retailerProvider = Provider.of<DataClassRetailer>(context);
-    //
-    //  setState(() {
-    //           username = (retailerProvider.json_data['data']['fullname']);
-    //           Email = (retailerProvider.json_data['data']['email']);
-    //    });
-
-    //String username = userProvider.us['username'].toString();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -127,24 +120,46 @@ class _ProfileState extends State<Profile> {
           ),
           InkWell(
             child: CustomListTile(
-              "Favorite list",
+              "your Customer Orders",
               Icons.favorite_outline,
               Icons.keyboard_arrow_right_outlined,
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) =>FavoriteScreen()));
+                  context, MaterialPageRoute(builder: (context) =>RetailerOrder()));
             },
           ),
           InkWell(
             child: CustomListTile(
-              "Add product and Inventory",
+              "Add Product",
               Icons.favorite_outline,
               Icons.keyboard_arrow_right_outlined,
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) =>UserProductsRetailerScreen()));
+                  context, MaterialPageRoute(builder: (context) =>AddUserProductRetailer()));
+            },
+          ),
+          InkWell(
+            child: CustomListTile(
+              "Add by Prediction",
+              Icons.favorite_outline,
+              Icons.keyboard_arrow_right_outlined,
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) =>predictimage()));
+            },
+          ),
+          InkWell(
+            child: CustomListTile(
+              "Add Workshops",
+              Icons.favorite_outline,
+              Icons.keyboard_arrow_right_outlined,
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) =>AddNearByWorkshops()));
             },
           ),
           // CustomListTile(
@@ -160,7 +175,7 @@ class _ProfileState extends State<Profile> {
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) =>UpdateUserDetails()));
+                  context, MaterialPageRoute(builder: (context) =>UpdateUserDetails_Retailer()));
             },
           ),
           InkWell(
@@ -183,7 +198,7 @@ class _ProfileState extends State<Profile> {
                 Timer(const Duration(microseconds: 200 ), () {
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                       SplashScreen(
-                        seconds: 3,
+                        seconds: 1,
                         navigateAfterSeconds:
                         MyApp(login: null, loginAs: null),
                         title: new Text(

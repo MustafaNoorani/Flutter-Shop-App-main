@@ -2,10 +2,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/login_registration/Retailer_login.dart';
-import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
-import '../provider/user_provider.dart';
-import '/provider/product_provider.dart';
+import '../../provider/user_id_class.dart';
+import '../../provider/user_provider.dart';
 
 class UpdateUserDetails extends StatefulWidget {
   const UpdateUserDetails({Key? key}) : super(key: key);
@@ -15,26 +13,30 @@ class UpdateUserDetails extends StatefulWidget {
 }
 
 class _UpdateUserDetailsState extends State<UpdateUserDetails> {
-  final TextEditingController _userpassword = TextEditingController();
   final TextEditingController _username = TextEditingController();
   final TextEditingController _userphone = TextEditingController();
   final _form = GlobalKey<FormState>();
+  String Email= "";
+  var username = "";
+  @override
+  void initState()  {
+    super.initState();
+    UserID.updateJsonDataWholesaler();
+    username =UserID.userid_Wholesaler.toString() ;
 
+  }
   @override
   void dispose() {
     _username.dispose();
-    _userpassword.dispose();
     _userphone.dispose();
     super.dispose();
   }
 
-  void _submitForm(user ,String vendorid) {
+  void _submitForm(user) {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
-    //user.updatedata(_userpassword.text,_userphone.text,_username.text);
-    user.updatedata(vendorid,_userpassword.text,_userphone.text,_username.text);
     _form.currentState!.save();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -43,7 +45,7 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
           style: TextStyle(fontSize: 16),
         ),
         backgroundColor: Colors.green,
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: 2),
       ),
     );
     Navigator.pop(context);
@@ -52,9 +54,6 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
   Widget build(BuildContext context) {
     Size _screenSize = MediaQuery.of(context).size;
     var vendor = Provider.of<DataClass>(context);
-    var User = Provider.of<DataClassRetailer>(context);
-    //String userId = User.json_data['data']['userid'];
-    String vendorId = vendor.json_data['data']['userid'];
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -64,7 +63,8 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
         actions: [
           TextButton(
             onPressed: () {
-              _submitForm(vendor,vendorId);
+              _submitForm(vendor);
+              vendor.updatedata(username, _userphone.text.toString(), _username.text.toString());
 
             },
             child: const Icon(
@@ -105,32 +105,6 @@ class _UpdateUserDetailsState extends State<UpdateUserDetails> {
                 validator: (inputValue) {
                   if (inputValue == "") {
                     return "Name is empty.";
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              SizedBox(
-                height: _screenSize.height * 0.04,
-              ),
-              TextFormField(
-                controller: _userpassword,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.indigo),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
-                textInputAction: TextInputAction.next,
-                validator: (inputValue) {
-                  if (inputValue == "") {
-                    return "Password is empty.";
                   } else {
                     return null;
                   }

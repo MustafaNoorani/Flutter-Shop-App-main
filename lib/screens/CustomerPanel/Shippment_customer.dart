@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/provider/order_provider.dart';
 import 'package:shop_app/routes/routes.dart';
-import 'package:shop_app/widgets/navigator.dart';
 import '../../provider/cart_provider.dart';
 import '../../provider/user_id_class.dart';
 import '../login_registration//input_field.dart';
@@ -21,19 +20,25 @@ class ShippingScreenCustomer extends StatefulWidget {
 
 class _ShippingScreenCustomerState extends State<ShippingScreenCustomer> {
   @override
-  // void initState() {
-  //   super.initState();
-  //   Provider.of<CartProvider>(context, listen: false).view_cart('r1');
-  // }
   String Email= "";
   var username;
+  var shippingData;
   @override
   void initState()  {
     UserID.updateJsonDataCustomer();
+    OrderShared.my_shared_prefrence_order_getData();
     super.initState();
     setState(() {
       username = UserID.userid_Customer;
+      if(OrderShared.json_order_data != null){
+        phoneController.text  = OrderShared.json_order_data!["phoneNo"]??"";
+        cnicController.text = OrderShared.json_order_data!["fulladdress"]??"";
+        fulladdressController.text = OrderShared.json_order_data!["cnic"]??"";
+        cityController.text = OrderShared.json_order_data!["city"]??"";}
+
     });
+
+    Provider.of<CartProvider>(context,listen: false).view_cart(username);
   }
 
   final TextEditingController phoneController = TextEditingController(text: '');
@@ -44,13 +49,6 @@ class _ShippingScreenCustomerState extends State<ShippingScreenCustomer> {
   @override
   Widget build(BuildContext context) {
     bool _isordered = false;
-    Widget alertDialog() {
-      return const AlertDialog(
-        title: Center(
-          child: Text("Order Accepted!"),
-        ),
-      );
-    }
     Size _screenSize = MediaQuery.of(context).size;
     Provider.of<CartProvider>(context,listen: false).view_cart(username);
     var cart = Provider.of<CartProvider>(context);
@@ -145,17 +143,6 @@ class _ShippingScreenCustomerState extends State<ShippingScreenCustomer> {
                       },
                     ),
 
-                    RadioListTile(
-                      title: Text("Online Payment"),
-                      value: "online",
-                      groupValue: payment,
-                      onChanged: (value){
-                        setState(() {
-                          payment = value.toString();
-                          print(payment);
-                        });
-                      },
-                    ),
                   ],
                 ),
                 CustomPrimaryButton(
@@ -163,6 +150,16 @@ class _ShippingScreenCustomerState extends State<ShippingScreenCustomer> {
                   textValue: 'Confirm Order',
                   textColor: textBlack,
                   onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Order Placed successfully",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                     cart.delete_prefrence();
                     cart.clearApiCart(username);
                     order.add_order(username,cart.items,phoneController.text,cnicController.text,fulladdressController.text,payment.toString());
@@ -186,26 +183,33 @@ class _ShippingScreenCustomerState extends State<ShippingScreenCustomer> {
   }
 }
 
-void _showDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Invalid User"),
-        content: Text("Enter Correct Details Thank You!"),
-        actions: <Widget>[
-          ElevatedButton(
-            child: new Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
+
+class OrderShared{
+  static Map? json_order_data;
+
+  static my_shared_prefrence_order(String phone,cnic,fulladdress,city) async {
+    SharedPreferences sharedpref_order= await SharedPreferences.getInstance();
+    var json={
+      "phoneNo":phone,
+      "cnic":cnic,
+      "fulladdress":fulladdress,
+      "city" : city
+    };
+    String myShipping = jsonEncode(json);
+    print(json_order_data);
+    sharedpref_order.setString("shipping", myShipping);
+  }
+  static Future<void> my_shared_prefrence_order_getData() async {
+    SharedPreferences sharedpref_order= await SharedPreferences.getInstance();
+    String jsonShip = sharedpref_order.getString("shipping") ?? '';
+    var json_data = jsonDecode(jsonShip);
+    json_order_data = json_data;
+
+    return json_data;
+
+
+  }
+
 }
-
-
 
 

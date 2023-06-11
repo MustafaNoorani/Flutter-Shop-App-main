@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/order_provider.dart';
 
+import '../models/cart.dart';
 import '../models/order.dart';
+import '../provider/product_provider.dart';
 import '../screens/login_registration/wholesaler_registration.dart';
 
 // ignore: must_be_immutable
@@ -23,6 +25,7 @@ class _OrderItemState extends State<OrderItem> {
   Widget build(BuildContext context) {
     Size _screenSize = MediaQuery.of(context).size;
     var orders = Provider.of<OrderProvider>(context);
+    var product = Provider.of<ProductProvider>(context);
     return InkWell(
       onTap: () {
         setState(() {
@@ -136,16 +139,6 @@ class _OrderItemState extends State<OrderItem> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
-                child: InkWell(
-                  onTap: (){
-                    orders.update_order_status(widget.order.id.
-                    toString(), "Delivered");
-                    setState(() {
-                      widget.order.Status= 'Delivered';
-                    });
-
-
-                  },
                   child: Card(
                     color: Colors.black,
                     margin: const EdgeInsets.all(0),
@@ -166,7 +159,46 @@ class _OrderItemState extends State<OrderItem> {
                     ),
                   ),
                 ),
-              )
+              Padding(
+                padding: const EdgeInsets.only(left: 250),
+                child: InkWell(
+                  onTap: (){
+                    //
+                    widget.order.orderItems.map((e) {
+                      int i =0;
+                      orders.quantity.putIfAbsent(e.id, () {
+                        return Cart(id: e.id, pid: "", itemid: "", productName: "", imgUrl: "", price: 0, quantity: e.quantity+product.quantitylist[i]);
+                      });
+                      i++;
+                    }).toList();
+                    orders.quantity.forEach((String, Cart) {
+                      product.update_product_quantity(Cart.id, Cart.quantity);
+                    });
+                    //
+                    orders.clearApiOrder(widget.order.id);
+
+                  },
+                  child: Card(
+                    color: Colors.black,
+                    //margin: const EdgeInsets.all(0),
+                    child: SizedBox(
+                      width: _screenSize.width * 0.4,
+                      height: 40,
+                      child:  Center(
+                        child: Text(
+                          " Cancel ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w200,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
 
             ]

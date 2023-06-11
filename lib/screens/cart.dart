@@ -30,7 +30,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     Size _screenSize = MediaQuery.of(context).size;
     var cart = Provider.of<CartProvider>(context);
-    var order = Provider.of<OrderProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -115,7 +115,7 @@ class _CartScreenState extends State<CartScreen> {
                   : ListView.builder(
                       itemCount: cart.cartItem.length,
                       itemBuilder: (context, index) => CartItem(
-                        pid: cart.cartItem.values.toList()[index].pid,
+                        itemid: cart.cartItem.values.toList()[index].itemid,
                           productid: cart.cartItem.values.toList()[index].id,
                           productName:
                               cart.cartItem.values.toList()[index].productName,

@@ -1,10 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:shop_app/provider/user_id_class.dart';
-//import 'package:shop_app/provider/userid_class.dart';
+import 'package:shop_app/widgets/Orderitem_retailer.dart';
 import 'package:shop_app/widgets/order_item.dart';
 
 import '../models/order.dart';
@@ -51,7 +50,7 @@ class _WholeSalerOrderState extends State<WholeSalerOrder> {
             return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return OrderItem(order: snapshot.data![index]);
+                  return OrderItemvendor(order: snapshot.data![index]);
                 });
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');

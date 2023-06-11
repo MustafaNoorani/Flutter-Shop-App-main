@@ -7,8 +7,10 @@ import 'package:shop_app/provider/user_provider.dart';
 import 'package:shop_app/provider/user_id_class.dart';
 import 'package:shop_app/screens/CustomerPanel/cart_customer.dart';
 import 'package:shop_app/screens/CustomerPanel/customer_login.dart';
+import 'package:shop_app/screens/CustomerPanel/forgotpassword.dart';
 import 'package:shop_app/screens/CustomerPanel/navigator_customer.dart';
 import 'package:shop_app/screens/CustomerPanel/orders_customer.dart';
+import 'package:shop_app/screens/Shippment.dart';
 import 'package:shop_app/screens/WholesalerProfile.dart';
 import 'package:shop_app/screens/login_registration/login_reg_screen.dart';
 import 'package:shop_app/screens/login_registration/retailer_login.dart';
@@ -32,6 +34,8 @@ Future<void> main() async {
   var loggedInWholeSaler = prefs.getString("WholeSaler") ?? '';
   var loggedInRetailer = prefs.getString("Retailer") ?? '';
   var loggedInCustomer = prefs.getString("Customer") ?? '';
+
+  OrderShared.my_shared_prefrence_order_getData()??"";
   bool? islogin;
   String? loginAs;
   if (loggedInWholeSaler != '' && loggedInRetailer == ''&& loggedInCustomer == '') {
@@ -124,19 +128,17 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             visualDensity: VisualDensity.adaptivePlatformDensity),
-        home:  SplashScreen(
-          seconds: 3,
+        home:
+        SplashScreen(
+          seconds: 2,
           navigateAfterSeconds:
           islogin == true && loginAs == 'w' ? WholesalerProfile() :  islogin == true && loginAs == 'r' ?
           NavigatorWidget() : islogin == true && loginAs == 'c' ? NavigatorWidgetCustomer() : WelcomeScreen() ,
-          title: new Text(
-            'SplashScreen Example',
-            style: new TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: Colors.white),
-          ),
-          backgroundColor: Colors.lightBlue[200],
+          title: new Text('Please Wait',textScaleFactor: 2,),
+          image: new Image.asset('assets/images/accent.png'),
+          loadingText: Text("Loading"),
+          photoSize: 200.0,
+          loaderColor: Colors.blue,
         ),
         // const NavigatorWidget(),
         routes: {
@@ -150,6 +152,7 @@ class _MyAppState extends State<MyApp> {
           Routes.customernavigator: (context)=> const NavigatorWidgetCustomer(),
           Routes.cartScreenCustomer: (context)=> const CartScreenCustomer(),
           Routes.orderScreenCustomer: (context)=> const OrderScreenCustomer(),
+          Routes.forgetpasswordScreenCustomer: (context)=> changepassord(),
         },
       ),
     );

@@ -143,10 +143,13 @@ class _ProductItemsCustomerState extends State<ProductItemsCustomer> {
             ),
             child: InkWell(
               onTap: () {
-                //print(widget.product.pid);
-                //print(username);
-                cart.add_cart(widget.product.pid,username);
+                if(cart.cartItem.containsKey(widget.product.id)){
+                  }
+                else{
+                  cart.add_cart(widget.product.pid,username);
+                }
                 cart.addToCart(widget.product.id,widget.product.pid,widget.product.productName,widget.product.price, widget.product.imageUrl,widget.product.pid);
+                products.update_product_quantity(widget.product.id,widget.product.quantity-cart.cartItem[widget.product.id]!.quantity);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

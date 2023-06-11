@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/main.dart';
+import 'package:shop_app/screens/CustomerPanel/maps.dart';
 //import 'package:shop_app/provider/userid_class.dart';
 import 'package:shop_app/screens/cart.dart';
 import 'package:shop_app/screens/favorite.dart';
@@ -135,6 +136,17 @@ class _ProfileCustomerState extends State<ProfileCustomer> {
                   context, MaterialPageRoute(builder: (context) =>FavoriteScreen()));
             },
           ),
+          InkWell(
+            child: CustomListTile(
+              "WorkShops Nearby",
+              Icons.favorite_outline,
+              Icons.keyboard_arrow_right_outlined,
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) =>MapSample()));
+            },
+          ),
           // CustomListTile(
           //   "Notification",
           //   Icons.notifications_outlined,
@@ -193,17 +205,14 @@ class _ProfileCustomerState extends State<ProfileCustomer> {
                 Timer(const Duration(microseconds: 200 ), () {
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                       SplashScreen(
-                        seconds: 3,
+                        seconds: 1,
                         navigateAfterSeconds:
                         MyApp(login: null, loginAs: null),
-                        title: new Text(
-                          'SplashScreen Example',
-                          style: new TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                              color: Colors.white),
-                        ),
-                        backgroundColor: Colors.lightBlue[200],
+                        title: new Text('Please Wait',textScaleFactor: 2,),
+                        image: new Image.asset('assets/images/accent.png'),
+                        loadingText: Text("Loading"),
+                        photoSize: 200.0,
+                        loaderColor: Colors.blue,
                       ),), (Route<dynamic> route) => false);
                 });
                 delete_prefrence();

@@ -11,6 +11,7 @@ import 'package:shop_app/screens/login_registration/wholesaler_registration.dart
 import '../../provider/cart_provider.dart';
 import '../../provider/order_provider.dart';
 import '../../provider/product_provider.dart';
+import '../CustomerPanel/opt_verify.dart';
 import './input_field.dart';
 import './theme.dart';
 import './custom_primary_button.dart';
@@ -158,6 +159,19 @@ class _LoginScreenState extends State<LoginScreenRetailer> {
                 ),
                 SizedBox(
                   height: 32,
+                ),
+                InkWell(
+                  child: Text(
+                    'Forget password ?',
+                    style: regular16pt.copyWith(color: primaryBlue),
+                  ),
+                  onTap:(){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SendOTP()));
+                  } ,
                 ),
                 SizedBox(
                   height: 32,
@@ -313,4 +327,5 @@ class DataClassRetailer extends ChangeNotifier {
       print(e.toString());
     }
   }
+
 }

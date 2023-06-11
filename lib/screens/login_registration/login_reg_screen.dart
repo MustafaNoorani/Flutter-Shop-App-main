@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/AdminPanel/AdminLogin.dart';
 import 'package:shop_app/screens/CustomerPanel/customer_login.dart';
 import 'package:shop_app/screens/login_registration/WholeSaler_login.dart';
 import 'package:shop_app/screens/login_registration/retailer_login.dart';
+import 'package:shop_app/screens/login_registration/theme.dart';
 import './custom_button_widget.dart';
-import '../../widgets/navigator.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -78,6 +79,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               );
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 200),
+            child: const SizedBox(height: 40),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "please click here for admin login ",
+                style: regular16pt.copyWith(color: textGrey),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LoginScreenAdmin()));
+                },
+                child: Text(
+                  'Sign In',
+                  style: regular16pt.copyWith(color: primaryBlue),
+                ),
+              ),
+            ],
           ),
         ],
       ),

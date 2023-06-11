@@ -9,6 +9,7 @@ import 'package:shop_app/screens/login_registration/wholesaler_registration.dart
 import 'package:shop_app/screens/profile.dart';
 import '../../provider/user_id_class.dart';
 import '../../provider/user_provider.dart';
+import '../CustomerPanel/opt_verify.dart';
 import './input_field.dart';
 import './theme.dart';
 import './custom_primary_button.dart';
@@ -55,13 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
     var provider = Provider.of<DataClass>(context, listen: false);
     await provider.postDataLogin(data);
     if (provider.json_data['success'] == true) {
+
       setState(() {
         islogin = true;
       });
       String userid = provider.json_data['data']['userid'];
-      //Product And Cart Word
-      // Provider.of<ProductProvider>(context, listen: false).getAllTodos();
-      // Provider.of<CartProvider>(context, listen: false).view_cart(userid);
       SharedPreferences WholesalerShared = await SharedPreferences.getInstance();
       var dataWholeSaler = {
         "success":true,
@@ -157,7 +156,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 32,
+                  height: 20,
+                ),
+                InkWell(
+                  child: Text(
+                    'Forget password ?',
+                    style: regular16pt.copyWith(color: primaryBlue),
+                  ),
+                  onTap:(){
+                   Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SendOTP()));
+                  } ,
                 ),
                 SizedBox(
                   height: 32,
@@ -169,25 +181,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     login(emailController.text ,passwordController.text);
                   },
-                ),
-
-                SizedBox(
-                  height: 24,
-                ),
-                Center(
-                  child: Text(
-                    'OR',
-                    style: heading6.copyWith(color: textGrey),
-                  ),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                CustomPrimaryButton(
-                  buttonColor: Color(0xfffbfbfb),
-                  textValue: 'Login with Google',
-                  textColor: textBlack,
-                  onPressed: () {},
                 ),
                 SizedBox(
                   height: 50,

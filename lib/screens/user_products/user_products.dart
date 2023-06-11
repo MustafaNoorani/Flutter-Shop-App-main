@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/product_provider.dart';
 import 'package:shop_app/provider/user_id_class.dart';
 
 import '../../models/product.dart';
-import '../../provider/user_provider.dart';
+
 import '../../routes/routes.dart';
 import '../../widgets/user_product_item.dart';
-import '../login_registration/wholesaler_registration.dart';
+
 
 class UserProductsScreen extends StatefulWidget {
   const UserProductsScreen({Key? key}) : super(key: key);
@@ -18,16 +17,7 @@ class UserProductsScreen extends StatefulWidget {
 }
 
 class _UserProductsScreenState extends State<UserProductsScreen> {
-  @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     var vendor = Provider.of<DataClass>(context, listen: false);
-  //     String vendorId = vendor.json_data['data']['userid'];
-  //     Provider.of<ProductProvider>(context, listen: false)
-  //         .getAllwholesaler(vendorId);
-  //   });
-  // }
+
   String Email= "";
   var username = "";
   @override
@@ -40,8 +30,7 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var vendor = Provider.of<DataClass>(context, listen: false);
-    // String vendorId = vendor.json_data['data']['userid'];
+
     var _product = Provider
         .of<ProductProvider>(context);
     return Scaffold(
@@ -77,6 +66,7 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
                             price: snapshot.data![index].price,
                             imgUrl: (snapshot.data![index].imageUrl),
                             status: (snapshot.data![index].status),
+                            quantity:(snapshot.data![index].quantity) ,
                           ),
                           const Divider(),
                         ],

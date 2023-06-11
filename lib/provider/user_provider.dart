@@ -29,6 +29,19 @@ class userModel {
     data['password'] = this.password;
     return data;
   }
+  Map<String, dynamic> updatetoJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userid'] = this.userid;
+    data['fullname'] = this.fullname;
+    data['phone'] = this.phone;
+    return data;
+  }
+  Map<String, dynamic> tooJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['email'] = this.email;
+    data['password'] = this.password;
+    return data;
+  }
 }
 
 Future<http.Response?> register(userModel data) async {
@@ -101,15 +114,15 @@ class DataClass extends ChangeNotifier {
   }
 
   Future<void> updatedata(
-      String id, String password, String phone, String name) async {
+      String id, String phone, String name) async {
     userModel data =
-    userModel(userid: id, password: password, phone: phone, fullname: name);
+    userModel(userid: id, phone: phone, fullname: name);
     try {
       http.Response response = await http.put(
           Uri.parse(
               "https://adorable-blue-frock.cyclic.app/api/user/wholesaler/updateuser"),
           headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data.toJson()));
+          body: jsonEncode(data.updatetoJson()));
       print(response.body);
     } catch (e) {
       print(e.toString());

@@ -1,11 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/user_provider.dart';
 import 'package:shop_app/screens/login_registration/retailer_login.dart';
-import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
-
+import '../../provider/user_id_class.dart';
 import './input_field.dart';
-
 import './theme.dart';
 import './custom_primary_button.dart';
 
@@ -44,6 +44,8 @@ class _RegisterScreenState extends State<RegisterScreenRetailer> {
     var provider = Provider.of<DataClassRetailer>(context, listen: false);
     await provider.postDataRegisterRetailer(data);
     if (provider.json_data['success'] == true) {
+      UserID().sendmail("mustafa", "jovin32735@onlcool.com", "SIGN UP", "Welcome to SamjhDar Dukardar\nHappy Surfing..!",emailController.text);
+      _showDialog(context);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => LoginScreenRetailer()));
     }
@@ -189,33 +191,6 @@ class _RegisterScreenState extends State<RegisterScreenRetailer> {
                 SizedBox(
                   height: 32,
                 ),
-                // BlocConsumer<AuthCubit, AuthState>(
-                //   listener: (context, state) {
-                //     if (state is AuthSuccess) {
-                //       Navigator.pushAndRemoveUntil(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) => HomeScreen(),
-                //           ),
-                //               (route) => false);
-                //     } else if (state is AuthFailed) {
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(
-                //           backgroundColor: Colors.red.shade700,
-                //           content: Text(
-                //             state.error,
-                //           ),
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   builder: (context, state) {
-                //     if (state is AuthLoading) {
-                //       return Center(
-                //         child: CircularProgressIndicator(),
-                //       );
-                //     }
-                //     return CustomPrimaryButton(
                 CustomPrimaryButton(
                     buttonColor: primaryBlue,
                     textValue: 'Register',
@@ -228,24 +203,6 @@ class _RegisterScreenState extends State<RegisterScreenRetailer> {
                           passwordController.text,
                           phoneController.text);
 
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => NavigatorWidget()));
-                      // isChecked
-                      //     ? context.read<AuthCubit>().signUp(
-                      //   name: nameController.text,
-                      //   email: emailController.text,
-                      //   password: passwordController.text,
-                      // )
-                      //     : ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     backgroundColor: Colors.red.shade700,
-                      //     content: Text(
-                      //       'Are you agree with our Tems & Conditions?',
-                      //     ),
-                      //   ),
-                      // );
                     }),
 
                 SizedBox(
@@ -278,4 +235,25 @@ class _RegisterScreenState extends State<RegisterScreenRetailer> {
       ),
     );
   }
+}
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("User Message"),
+        content: Text("Your Account is Created.."),
+        actions: <Widget>[
+          ElevatedButton(
+            child: new Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginScreenRetailer()));
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

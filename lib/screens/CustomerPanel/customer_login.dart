@@ -8,6 +8,7 @@ import 'package:shop_app/provider/user_id_class.dart';
 import 'package:shop_app/provider/user_provider.dart';
 import 'package:shop_app/screens/CustomerPanel/customer_registration.dart';
 import 'package:shop_app/screens/CustomerPanel/navigator_customer.dart';
+import 'package:shop_app/screens/CustomerPanel/opt_verify.dart';
 import 'package:shop_app/screens/login_registration/retailer_registration.dart';
 import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
 import '../../provider/cart_provider.dart';
@@ -86,8 +87,8 @@ class _LoginScreenState extends State<LoginScreenCustomer> {
         }
       };
       CustomerShared.setString("Customer", jsonEncode(dataCustomer));
-      UserID.updateJsonDataRetailer();
-      final timer = Timer(const Duration(seconds: 2), () {
+      UserID.updateJsonDataCustomer();
+      final timer = Timer(const Duration(seconds: 1), () {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
             NavigatorWidgetCustomer()), (Route<dynamic> route) => false);
       });
@@ -154,6 +155,23 @@ class _LoginScreenState extends State<LoginScreenCustomer> {
                               : Icons.visibility_off_outlined),
                           onPressed: togglePassword,
                         ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        child: Text(
+                          'Forget password ?',
+                          style: regular16pt.copyWith(color: primaryBlue),
+                        ),
+                        onTap:(){
+                          //UserID().sendmail("mustafa", "jovin32735@onlcool.com", "Password Update", "message: PAssword","jovin32735@onlcool.com");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SendOTP()));
+                        } ,
                       ),
                     ],
                   ),
@@ -314,5 +332,43 @@ class DataClassCustomer extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
+  }
+  Future<void> updatepassword(
+      String email, String password) async {
+    userModel data =
+    userModel(email:email, password: password);
+    try {
+      http.Response response = await http.put(
+          Uri.parse(
+              "https://adorable-blue-frock.cyclic.app/api/user/customer/changepassword"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data.tooJson()));
+      print(response.body);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<List<userModel>> getAllCustomer(String User) async {
+    String url = 'https://adorable-blue-frock.cyclic.app/api/user/'+User+'/getlist';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body) as List;
+      return getdata(json);
+    }
+    return [];
+  }
+  Future<List<userModel>> getdata(List<dynamic> myData) async {
+    final todos = myData.map((e) {
+      return userModel(
+          fullname: e['fullname'],
+          userid: e['userid'],
+          email: e['email'],
+          phone: e['phone'],
+          password: e['password']
+      );
+
+    }).toList();
+    return todos;
   }
 }

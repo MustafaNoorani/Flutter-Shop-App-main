@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/login_registration/wholesaler_registration.dart';
-import 'package:shop_app/screens/user_products/user_products.dart';
 import '../../provider/user_id_class.dart';
 import '../../routes/routes.dart';
 import '/provider/product_provider.dart';
@@ -108,7 +106,6 @@ class _AddUserProductState extends State<AddUserProduct> {
     }
     _form.currentState!.save();
     product.add_product(userId,_productName.text,_productPrice.text,_productQuantity.text,_productDescription.text,image,SelectedItem,"w");
-    //product.getAllwholesaler(userId);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
@@ -137,9 +134,7 @@ class _AddUserProductState extends State<AddUserProduct> {
   @override
   Widget build(BuildContext context) {
     Size _screenSize = MediaQuery.of(context).size;
-    //var user = Provider.of<DataClass>(context);
     var product = Provider.of<ProductProvider>(context);
-    //String userId = "Default";
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -150,8 +145,6 @@ class _AddUserProductState extends State<AddUserProduct> {
           TextButton(
             onPressed: () {
               //print(SelectedItem);
-              //userId = (user.json_data['data']['userid']);
-              print(username + "wholesale name");
               _submitForm(username,product);
               //add_product(userId,_productName.text,_productPrice.text,_productQuantity.text,_productDescription.text,image,SelectedItem);
             },

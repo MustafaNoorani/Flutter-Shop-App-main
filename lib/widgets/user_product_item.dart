@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/cart.dart';
 import 'package:shop_app/widgets/product_item.dart';
 //import 'package:shop_app/screens/user_products/update_product.dart';
 
+import '../provider/order_provider.dart';
 import '../provider/product_provider.dart';
 import '../routes/routes.dart';
 
@@ -15,9 +17,10 @@ class UserProductsItem extends StatefulWidget {
   int price;
   String imgUrl;
   bool status;
+  int quantity;
 
   UserProductsItem(
-      {required this.productName, required this.price, required this.imgUrl,required this.id,required this.status});
+      {required this.productName, required this.price, required this.imgUrl,required this.id,required this.status,required this.quantity});
 
   @override
   State<UserProductsItem> createState() => _UserProductsItemState();
@@ -33,6 +36,7 @@ class _UserProductsItemState extends State<UserProductsItem> {
     Size _screenSize = MediaQuery.of(context).size;
     var _product = Provider
         .of<ProductProvider>(context);
+    _product.quantitylist.add(widget.quantity);
     return ListTile(
       leading: SizedBox(
         width: _screenSize.width * 0.15,
@@ -45,7 +49,7 @@ class _UserProductsItemState extends State<UserProductsItem> {
         widget.productName,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
-      subtitle: Text(widget.price.toString()),
+      subtitle: Text("${widget.price.toString()}\n${widget.quantity.toString()}"),
       trailing: SizedBox(
         width: _screenSize.width /2,
         child: Row(

@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/screens/Shippment.dart';
 import 'package:shop_app/widgets/my_drawer.dart';
 
 import '../models/product.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     Provider.of<CartProvider>(context, listen: false).my_shared_prefrence();
     // Provider.of<OrderProvider>(context, listen: false).getuser();
   }
