@@ -1,5 +1,5 @@
-# Zulu Shop App
- <h4>Made For Education Purpose. don't forget to get all Packages!</h4>
+# **Samajhdar Dukandar**
+ <h4>Made For last semester project project. don't forget to get all Packages!</h4>
  <h3>This app includes</h3>
  -> 7+ Screens/Ui.<br>
  -> Add,edit & delete Product.<br>
